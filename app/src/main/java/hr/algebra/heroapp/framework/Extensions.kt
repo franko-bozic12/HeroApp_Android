@@ -1,5 +1,6 @@
 package hr.algebra.heroapp.framework
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -12,6 +13,8 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.core.content.getSystemService
 import androidx.preference.PreferenceManager
+import hr.algebra.heroapp.NASA_PROVIDER_CONTENT_URI
+import hr.algebra.heroapp.model.Item
 
 fun View.applyAnimation(animationId: Int) =
     startAnimation(AnimationUtils.loadAnimation(context, animationId))
@@ -53,4 +56,31 @@ fun callDelayed(delay: Long, work: () -> Unit) {
         work,
         delay
     )
+}
+
+@SuppressLint("Range")
+fun Context.fetchItems() : MutableList<Item> {
+    val items = mutableListOf<Item>()
+
+    val cursor = contentResolver.query(
+        NASA_PROVIDER_CONTENT_URI, null, null, null, null
+    )
+    while (cursor != null && cursor.moveToNext()){
+        items.add(Item(
+            cursor.getLong(cursor.getColumnIndexOrThrow(Item::_id.name)),
+            cursor.getString(cursor.getColumnIndexOrThrow(Item::name.name)),
+            cursor.getLong(cursor.getColumnIndexOrThrow(Item::intelligence.name)),
+            cursor.getLong(cursor.getColumnIndexOrThrow(Item::strength.name)),
+            cursor.getLong(cursor.getColumnIndexOrThrow(Item::speed.name)),
+            cursor.getLong(cursor.getColumnIndexOrThrow(Item::durability.name)),
+            cursor.getLong(cursor.getColumnIndexOrThrow(Item::power.name)),
+            cursor.getLong(cursor.getColumnIndexOrThrow(Item::combat.name)),
+            cursor.getString(cursor.getColumnIndexOrThrow(Item::gender.name)),
+            cursor.getString(cursor.getColumnIndexOrThrow(Item::race.name)),
+            cursor.getString(cursor.getColumnIndexOrThrow(Item::picturePath.name)),
+            cursor.getInt(cursor.getColumnIndexOrThrow(Item::read.name))==1
+        ))
+    }
+
+    return items
 }

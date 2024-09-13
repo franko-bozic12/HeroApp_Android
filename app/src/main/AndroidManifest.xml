@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HeroApp"
         tools:targetApi="31">
+        <activity
+            android:name=".ItemPagerActivity"
+            android:exported="false" />
+
+        <provider
+            android:name=".HeroContentProvider"
+            android:authorities="hr.algebra.heroapp.api.provider"
+            android:enabled="true"
+            android:exported="false"></provider>
+
         <receiver
             android:name=".HeroReceiver"
             android:enabled="true"
